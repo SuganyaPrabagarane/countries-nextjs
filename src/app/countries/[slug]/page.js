@@ -1,5 +1,5 @@
 "use client";
-import { clearSelectedCountry, setSelectedCountry, selectCountryByName } from "@/lib/features/countries/countriesSlice";
+import { clearSelectedCountry, setSelectedCountry, selectCountryByName, fetchCountries } from "@/lib/features/countries/countriesSlice";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Box, Button, Card, CardContent, Chip, Divider, Grid, Paper, Typography } from "@mui/material";
 import Image from "next/image";
@@ -17,6 +17,13 @@ const CountryPage = () => {
     const { selectedCountry, loading, error, countries } = useSelector(
         (state) => state.countries
     );
+
+    useEffect(() => {
+        if (countries.length === 0) {
+            dispatch(fetchCountries());
+        }
+
+    }, []);
 
     // 3. Weather state (we'll add this functionality later)
     const [weatherData, setWeatherData] = useState(null);
