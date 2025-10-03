@@ -17,8 +17,14 @@ const Navigation = ({children}) =>{
                     <Button color='inherit' onClick={()=> router.push("/countries")}>Countries</Button>
                     <Button color='inherit' onClick={()=> router.push("/example")}>Example</Button>
                     <Button color='inherit' onClick={()=> router.push("/protected")}>Protected</Button>
+                    {/* { user && (
+                        <Button color="inherit" onClick={() => router.push("/profile")}> Profile </Button>
+                    )} */}
                     {user && (
-                        <Button color="inherit" onClick={() => signOut()}> Logout </Button>
+                        <div>
+                            <Button color="inherit" onClick={() => signOut()}> Logout </Button>
+                            <Button color="inherit" onClick={() => router.push("/profile")}> Profile </Button>
+                        </div>
                     )}
                     {!user && (
                         <Button color="inherit" onClick={() => router.push("/login")}> Login </Button>
