@@ -2,8 +2,9 @@
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCountries } from "@/lib/features/countries/countriesSlice";
 import { useEffect } from "react";
-import { CardContent, Grid, Typography, Card, CardActionArea } from "@mui/material";
+import { CardContent, Grid, Typography, Card, CardActionArea, TextField, InputAdornment, Box } from "@mui/material";
 import { useRouter } from "next/navigation";
+import SearchIcon from "@mui/icons-material/Search";
 
 const Countries = () => {
 
@@ -37,6 +38,34 @@ const Countries = () => {
     return (
         <>
             {/* <h1>Countries</h1> */}
+            <Box
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                sx={{
+                    width: "100%",
+                    py: 4,
+                }}
+            >
+                <TextField
+                    variant="outlined"
+                    placeholder="Search..."
+                    size="small"
+                    sx={{
+                        width: 600,
+                        backgroundColor: "#fff",
+                        borderRadius: 2,
+                        boxShadow: 2,
+                    }}
+                    InputProps={{
+                        startAdornment: (
+                            <InputAdornment position="start">
+                                <SearchIcon />
+                            </InputAdornment>
+                        ),
+                    }}
+                />
+            </Box>
             <Grid
                 container spacing={3}
                 direction="row"

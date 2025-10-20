@@ -1,5 +1,8 @@
 "use client";
+import { useAuth } from "@/app/context/AuthContext";
+import FavouriteButton from "@/components/FavouriteButton";
 import { clearSelectedCountry, setSelectedCountry, selectCountryByName, fetchCountries } from "@/lib/features/countries/countriesSlice";
+import { fetchFavourites } from "@/lib/features/favourites/favouritesSlice";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Box, Button, Card, CardContent, Chip, Divider, Grid, Paper, Typography } from "@mui/material";
 import Image from "next/image";
@@ -12,6 +15,7 @@ const CountryPage = () => {
     const { slug } = useParams();
     const router = useRouter();
     const dispatch = useDispatch();
+    const { user } = useAuth();
 
     // 2. Get country data from Redux store
     const { selectedCountry, loading, error, countries } = useSelector(
@@ -22,6 +26,7 @@ const CountryPage = () => {
         if (countries.length === 0) {
             dispatch(fetchCountries());
         }
+        dispatch(fetchFavourites());
 
     }, []);
 
@@ -184,6 +189,12 @@ const CountryPage = () => {
             >
                 Back to Countries
             </Button>
+
+            {user && (
+                <Box>
+                    <FavouriteButton country={selectedCountry} />
+                </Box>
+            )}
 
             {/* Main Content */}
             <Paper elevation={3} sx={{ p: 4 }}>
