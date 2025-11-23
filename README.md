@@ -31,6 +31,9 @@ Authenticated users can mark countries as favorites and manage their profiles. T
   - Temperature, “feels like”, humidity, wind speed  
   - Weather description and icon  
 
+- **Border Countries**    
+  - See all neighboring countries of a selected country 
+
 - **Interactive Map**  
   Locate the capital city on an interactive map.
 
