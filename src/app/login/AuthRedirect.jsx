@@ -10,6 +10,7 @@ export const AuthRedirect = () =>{
     useEffect (()=> {
         if (user){
             router.push("/protected")
+            
         }
 
     }, [user, router]);

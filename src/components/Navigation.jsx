@@ -1,40 +1,76 @@
 "use client";
 
 import { useAuth } from "@/app/context/AuthContext";
-import { AppBar, Button, Toolbar } from "@mui/material";
+import { AppBar, Box, Button, Toolbar } from "@mui/material";
 import { useRouter } from "next/navigation";
 import ThemeToggle from "./ThemeToggle";
+import { useTheme } from "@/app/context/ThemeContext";
+
+const Navigation = ({ children }) => {
+  const { user, signOut } = useAuth();
+  const router = useRouter();
+  const { theme } = useTheme(); 
+
+  const headerBg =
+  theme.palette.mode === "dark"
+  ? theme.palette.background.paper 
+  : theme.palette.primary.dark;   
+  const headerText = theme.palette.mode === "dark" ? theme.palette.text.primary : "#ffffff";
 
 
-const Navigation = ({children}) =>{
-    const {user, signOut} = useAuth();
-    const router = useRouter();
+  return (
+    <div>
+      <AppBar
+        position="static"
+        sx={{
+          mb: 3,
+          backgroundColor: headerBg,
+          color: headerText,
+        }}
+      >
+        <Toolbar>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: 2,
+              width: "100%",
+              flexWrap: "wrap", 
+            }}
+          >
+            <Button color="inherit" onClick={() => router.push("/countries")}>
+              COUNTRIES
+            </Button>
+            <Button color="inherit" onClick={() => router.push("/protected")}>
+              PROTECTED
+            </Button>
 
-    return (
-        <div>
-            <AppBar position="static" color="gradient" sx={{mb:3}} >
-                <Toolbar>
-                    <Button color='inherit' onClick={()=> router.push("/countries")}>Countries</Button>
-                    <Button color='inherit' onClick={()=> router.push("/example")}>Example</Button>
-                    <Button color='inherit' onClick={()=> router.push("/protected")}>Protected</Button>
-                    {/* { user && (
-                        <Button color="inherit" onClick={() => router.push("/profile")}> Profile </Button>
-                    )} */}
-                    {user && (
-                        <div>
-                            <Button color="inherit" onClick={() => signOut()}> Logout </Button>
-                            <Button color="inherit" onClick={() => router.push("/profile")}> Profile </Button>
-                        </div>
-                    )}
-                    {!user && (
-                        <Button color="inherit" onClick={() => router.push("/login")}> Login </Button>
-                    )}
-                    <ThemeToggle />
-                </Toolbar>
-            </AppBar>
-            {children}
-        </div>
-    );
-}
+            {user ? (
+              <>
+                <Button color="inherit" onClick={() => signOut()}>
+                  LOGOUT
+                </Button>
+                <Button color="inherit" onClick={() => router.push("/profile")}>
+                  PROFILE
+                </Button>
+                <Button color="inherit" onClick={() => router.push("/favourite")}>
+                  FAVOURITE
+                </Button>
+              </>
+            ) : (
+              <Button color="inherit" onClick={() => router.push("/login")}>
+                LOGIN
+              </Button>
+            )}
+
+            <ThemeToggle />
+          </Box>
+        </Toolbar>
+      </AppBar>
+      {children}
+    </div>
+  );
+};
 
 export default Navigation;

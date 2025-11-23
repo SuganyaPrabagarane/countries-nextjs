@@ -1,8 +1,8 @@
 "use client";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCountries } from "@/lib/features/countries/countriesSlice";
-import { useEffect } from "react";
-import { CardContent, Grid, Typography, Card, CardActionArea, TextField, InputAdornment, Box } from "@mui/material";
+import { useEffect, useState } from "react";
+import { CardContent, Grid, Typography, Card, CardActionArea, TextField, InputAdornment, Box, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import { useRouter } from "next/navigation";
 import SearchIcon from "@mui/icons-material/Search";
 
@@ -10,6 +10,8 @@ const Countries = () => {
 
     const router = useRouter();
     const dispatch = useDispatch();
+    const [search, setSearch] = useState("");
+    const [region, setRegion] = useState("");
 
     //First countries comes from store.js file, second countries comes from countriesSlice.js under initialState
     const countries = useSelector((state) => state.countries.countries);
@@ -33,15 +35,24 @@ const Countries = () => {
             .join(",")
     }
 
+    const filteredCounteries = countries.filter((country) => {
+        const searchCountry = country.name.common.toLowerCase().includes(search.toLowerCase());
+        const filterByRegion = region === "" || country.region === region;
+
+        return searchCountry && filterByRegion;
+    })
+
+    const regions = [...new Set(countries.map((country) => country.region).filter(Boolean).sort())];
+
 
 
     return (
         <>
-            {/* <h1>Countries</h1> */}
             <Box
                 display="flex"
                 justifyContent="center"
                 alignItems="center"
+                gap={2}
                 sx={{
                     width: "100%",
                     py: 4,
@@ -51,9 +62,10 @@ const Countries = () => {
                     variant="outlined"
                     placeholder="Search..."
                     size="small"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
                     sx={{
-                        width: 600,
-                        backgroundColor: "#fff",
+                        width: 400,
                         borderRadius: 2,
                         boxShadow: 2,
                     }}
@@ -65,20 +77,38 @@ const Countries = () => {
                         ),
                     }}
                 />
+
+                <FormControl size="small" sx={{ width: 200 }}>
+                    <InputLabel>Region</InputLabel>
+                    <Select
+                        value={region}
+                        label="Region"
+                        onChange={(e) => setRegion(e.target.value)}
+                    >
+                        <MenuItem value="">All Regions</MenuItem>
+
+                        {regions.map((region) => (
+                            <MenuItem key={region} value={region}>
+                                {region}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
             </Box>
             <Grid
-                container spacing={3}
+                container spacing={4}
                 direction="row"
                 justifyContent="center"
                 alignItems="center">
-                {countries.map(country => (
-                    <Card key={country.name.common} sx={{ width: "300px", height: "250px" }} >
+                {filteredCounteries.map(country => (
+                    <Card key={country.name.common} sx={{ width: "280px", height: "260px" }} >
                         <CardActionArea onClick={() => handleCountryClick(country.name.common)} >
                             <CardContent>
-                                <img src={country.flags.svg} alt="flag" width={100} height={50} style={{ objectFit: "cover" }} />
+                                <img src={country.flags.svg} alt="flag" width={150} height={55} style={{ objectFit: "cover" , borderRadius:'5px', paddingBottom:'10px'}} />
                                 <Typography variant="h5">{country.name.common}</Typography>
                                 <Typography variant="h6"> {country.population}  </Typography>
                                 <Typography variant="h6">{getCurrencies(country)}</Typography>
+                                <Typography variant="h6"> ({country.region})  </Typography>
                             </CardContent>
                         </CardActionArea>
 

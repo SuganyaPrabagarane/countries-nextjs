@@ -17,7 +17,7 @@ const ProfilePage = () => {
     }, [user, dispatch]);
 
     return (
-        <Box sx={{ maxWidth: 800, mx: "auto", p: 3 }}>
+        <Box sx={{ minWidth: 600, mx: "auto", p: 4 }}>
             <Typography variant="h4" gutterBottom>
                 My Profile
             </Typography>

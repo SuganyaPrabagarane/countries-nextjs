@@ -3,6 +3,7 @@ import "./globals.css";
 import StoreProvider from "./StoreProvider";
 import { AuthProvider } from "./context/AuthContext";
 import Navigation from "@/components/Navigation";
+import Footer from "@/components/Footer";
 import { CustomThemeProvider } from "./context/ThemeContext";
 
 const geistSans = Geist({
@@ -25,11 +26,18 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}
       >
         <CustomThemeProvider>
           <AuthProvider>
             <StoreProvider>
-              <Navigation>{children}</Navigation>
+              <Navigation />
+
+              <main style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+                {children}
+              </main>
+
+              <Footer />
             </StoreProvider>
           </AuthProvider>
         </CustomThemeProvider>

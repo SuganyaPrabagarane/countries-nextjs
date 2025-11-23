@@ -1,36 +1,75 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Countries App
 
-## Getting Started
+A modern web application to explore countries around the world with detailed information including flags, population, currency, languages, weather, and maps.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## About the Project
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The **Countries App** allows users to browse and explore countries globally. Users can view detailed information about each country, check the weather in the capital city, and locate it on an interactive map.  
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+Authenticated users can mark countries as favorites and manage their profiles. The app features light and dark mode for better user experience and responsive design for all devices.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## Features
 
-To learn more about Next.js, take a look at the following resources:
+- **Explore Countries**  
+  Browse a searchable list of all countries with flags and names.
+  - Filter countries by region (e.g., Africa, Europe, Asia, Americas, Oceania)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Country Details**  
+  Access detailed information including:  
+  - Flag & official/common names  
+  - Population  
+  - Currency (name & symbol)  
+  - Languages  
+  - Capital city and region  
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Weather in Capital**  
+  Real-time weather data from OpenWeather API:  
+  - Temperature, “feels like”, humidity, wind speed  
+  - Weather description and icon  
 
-## Deploy on Vercel
+- **Interactive Map**  
+  Locate the capital city on an interactive map.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **Favorites**  
+  - Mark countries as favorites for quick access  
+  - Favorites are user-specific (requires login)  
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Authentication & User Profile**  
+  - Login and logout functionality  
+  - Protected routes for profile and favorites pages  
+  - Manage user profile information  
+
+- **Theme Support**  
+  Toggle between light and dark modes with dynamic UI colors.
+
+- **Responsive Design**  
+  Optimized layout for desktops, tablets, and mobile devices.
+
+- **Smooth Navigation & Layout**  
+  - Sticky header with navigation buttons  
+  - Footer always at the bottom with current year  
+  - Main content grows to fill available space  
+
+- **Performance & UX Enhancements**  
+  - Redux for state management (countries, favorites, weather)  
+  - Graceful loading and error handling  
+  - Smooth transitions and modern UI components  
+
+---
+
+## Tech Stack
+
+- **Frontend**: Next.js, React  
+- **UI Library**: Material-UI (MUI)  
+- **State Management**: Redux Toolkit  
+- **API Integration**: REST API for country data & OpenWeather API for weather  
+- **Map**: Leaflet / React-Leaflet  
+- **Authentication**: Custom Auth Context   
+- **Theming**: Light/Dark Mode with MUI ThemeProvider  
+
+---
+
