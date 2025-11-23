@@ -12,23 +12,12 @@ import { useDispatch, useSelector } from "react-redux";
 import CapitalMap from "@/components/CapitalMap";
 
 const CountryPage = () => {
-    // 1. Get URL parameters and setup hooks
     const { slug } = useParams();
     const router = useRouter();
     const dispatch = useDispatch();
     const { user } = useAuth();
-
-    // 2. Get country data from Redux store
     const { selectedCountry, loading, error, countries } = useSelector((state) => state.countries);
 
-    useEffect(() => {
-        if (countries.length === 0) {
-            dispatch(fetchCountries());
-        }
-        dispatch(fetchFavourites());
-    }, [countries.length, dispatch]);
-
-    // 3. Weather state
     const [weatherData, setWeatherData] = useState(null);
     const [weatherLoading, setWeatherLoading] = useState(false);
     const [weatherError, setWeatherError] = useState(null);
@@ -43,9 +32,7 @@ const CountryPage = () => {
             const response = await fetch(
                 `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(capital)}&appid=${API_KEY}&units=metric`
             );
-
             if (!response.ok) throw new Error("Weather data not available");
-
             const data = await response.json();
             setWeatherData(data);
         } catch (err) {
@@ -57,12 +44,18 @@ const CountryPage = () => {
     };
 
     useEffect(() => {
+        if (countries.length === 0) {
+            dispatch(fetchCountries());
+        }
+        dispatch(fetchFavourites());
+    }, [countries.length, dispatch]);
+
+    useEffect(() => {
         if (selectedCountry?.capital?.[0]) {
             fetchWeatherData(selectedCountry.capital[0]);
         }
     }, [selectedCountry]);
 
-    // 4. Find and set country data from existing store data
     useEffect(() => {
         if (slug && countries.length > 0) {
             const countryName = decodeURIComponent(slug.replace(/-/g, " "));
@@ -81,12 +74,27 @@ const CountryPage = () => {
         };
     }, [slug, countries, dispatch]);
 
-    // 5. Navigation handler
     const handleBack = () => {
         router.push("/countries");
     };
 
-    // 6. Loading state
+    const getLanguages = (country) => {
+        if (!country.languages) return "N/A";
+        return Object.values(country.languages).join(", ");
+    };
+
+    const formatPopulation = (population) => {
+        return new Intl.NumberFormat().format(population);
+    };
+
+    const getBorderCountries = (borderCodes) => {
+        if (!borderCodes || borderCodes.length === 0) return ["None"];
+        return borderCodes.map((code) => {
+            const country = countries.find((c) => c.cca3 === code);
+            return country ? country.name.common : code;
+        });
+    };
+
     if (loading || countries.length === 0) {
         return (
             <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
@@ -95,7 +103,6 @@ const CountryPage = () => {
         );
     }
 
-    // 7. Error state
     if (error) {
         return (
             <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" minHeight="400px" gap={2}>
@@ -109,7 +116,6 @@ const CountryPage = () => {
         );
     }
 
-    // 8. No data state
     if (!selectedCountry) {
         return (
             <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" minHeight="400px" gap={2}>
@@ -121,30 +127,19 @@ const CountryPage = () => {
         );
     }
 
-    // 9. Helper functions
-    const getLanguages = (country) => {
-        if (!country.languages) return "N/A";
-        return Object.values(country.languages).join(", ");
-    };
-
-    const formatPopulation = (population) => {
-        return new Intl.NumberFormat().format(population);
-    };
-
-    // 10. Main render
     return (
-        <Box sx={{ minWidth: 900, mx: "auto", p: 3 }}>
-
+        <Box sx={{ maxWidth: 1200, mx: "auto", p: 3 }}>
             <Button variant="outlined" onClick={handleBack} startIcon={<ArrowBackIcon />} sx={{ mb: 3 }}>
                 Back to Countries
-            </Button> <br></br>
+            </Button><br></br>
 
             {user && <FavouriteButton country={selectedCountry} />}
 
             <Paper elevation={3} sx={{ p: 4 }}>
-                <Grid container spacing={4} alignItems="flex-start">
-                    {/* 1. Flag and Name */}
-                    <Grid item xs={12} md={4}>
+                <Grid container spacing={4}>
+                    {/* Row 1 */}
+                    <Grid item xs={12} md={6}>
+                        {/* Country Name & Flag */}
                         <Card sx={{ height: "100%" }}>
                             <CardContent>
                                 <Box display="flex" flexDirection="column" alignItems="center" gap={3}>
@@ -164,8 +159,8 @@ const CountryPage = () => {
                         </Card>
                     </Grid>
 
-                    {/* 2. Country Details */}
-                    <Grid item xs={12} md={4}>
+                    <Grid item xs={12} md={6}>
+                        {/* Country Details */}
                         <Card sx={{ height: "100%", width: 200 }}>
                             <CardContent>
                                 <Typography variant="h6" gutterBottom>
@@ -193,7 +188,13 @@ const CountryPage = () => {
                                             {getLanguages(selectedCountry)
                                                 .split(", ")
                                                 .map((language, index) => (
-                                                    <Chip key={index} label={language} variant="outlined" size="small" sx={{ mr: 1, mb: 1 }} />
+                                                    <Chip
+                                                        key={index}
+                                                        label={language}
+                                                        variant="outlined"
+                                                        size="small"
+                                                        sx={{ mr: 1, mb: 1 }}
+                                                    />
                                                 ))}
                                         </Box>
                                     </Box>
@@ -202,9 +203,10 @@ const CountryPage = () => {
                         </Card>
                     </Grid>
 
-                    {/* 3. Weather Details */}
-                    <Grid item xs={12} md={4}>
-                        <Card sx={{ height: "100%" }}>
+                    {/* Row 2 */}
+                    <Grid item xs={12} md={6}>
+                        {/* Weather Details */}
+                        <Card sx={{ height: "100%", width: 200 }}>
                             <CardContent>
                                 <Typography variant="h6" gutterBottom>
                                     Weather in {selectedCountry.capital?.[0]}
@@ -249,12 +251,40 @@ const CountryPage = () => {
                             </CardContent>
                         </Card>
                     </Grid>
+
+                    <Grid item xs={12} md={6}>
+                        {/* Border Countries */}
+                        <Card sx={{ height: "100%", maxWidth: 300 }}>
+                            <CardContent>
+                                <Typography variant="h6" gutterBottom>
+                                    Border Countries
+                                </Typography>
+                                <Divider sx={{ mb: 2 }} />
+                                <Box display="flex" flexWrap="wrap" gap={1}>
+                                    {getBorderCountries(selectedCountry.borders).map((border, index) => (
+                                        <Chip
+                                            key={index}
+                                            label={border}
+                                            variant="outlined"
+                                            size="small"
+                                            sx={{ mr: 1, mb: 1 }}
+                                        />
+                                    ))}
+                                </Box>
+                            </CardContent>
+                        </Card>
+                    </Grid>
                 </Grid>
 
                 {/* Map */}
                 {selectedCountry?.capitalInfo?.latlng && (
-                    <Box sx={{ mt: 4 }}>
-                        <CapitalMap capital={selectedCountry.capital[0]} latlng={selectedCountry.capitalInfo.latlng} />
+                    <Box sx={{ mt: 4, display: "flex", justifyContent: "center" }}>
+                        <Box sx={{ minWidth: 500, width: "100%", maxWidth: 1200 }}>
+                            <CapitalMap
+                                capital={selectedCountry.capital[0]}
+                                latlng={selectedCountry.capitalInfo.latlng}
+                            />
+                        </Box>
                     </Box>
                 )}
             </Paper>

@@ -3,7 +3,7 @@ import axios from 'axios';
 
 
 // ✅ RECOMMENDED - One API call with all data
-const api = "https://restcountries.com/v3.1/all?fields=name,flags,population,currencies,capitalInfo,languages,region,subregion,area,capital";
+const api = "https://restcountries.com/v3.1/all?fields=name,borders,flags,population,currencies,capitalInfo,languages,region,cca3,capital";
 
 const initialState = {
     countries: [],
