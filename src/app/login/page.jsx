@@ -53,7 +53,6 @@ const Login = () => {
                 providers={["google"]}
                 socialLayout="horizontal"
                 view="sign_in"
-                redirectTo={process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}
                 />
             </Paper>
             </Box>
